@@ -37,8 +37,11 @@ button.addEventListener("click", function() {
         console.log("HMAC: " + hmac);
 
 //////////////////////////////// Test host and access key and hmac
+console.log('url',currentURL);
+console.log('marchandId',marchandId);
+console.log('accessKey',accessKey);
 
-    var url = `http://localhost:8085/marchand/permission?hostname=${currentURL}&accessKey=${accessKey}&marchandId=${marchandId}&orderId=${orderId}&amount=${amount}&currency=${currency}&hmac=${hmac}`;
+    var url = `http://localhost:8080/api/merchants/permission?hostname=${currentURL}&accessKey=${accessKey}&marchandId=${marchandId}&orderId=${orderId}&amount=${amount}&currency=${currency}&hmac=${hmac}`;
 
     // Fetch data from localhost
     fetch(url)
@@ -84,7 +87,7 @@ button.addEventListener("click", function() {
         if (!iframe) {
             iframe = document.createElement("iframe");
             iframe.id = "myiframe";
-            iframe.src = `https://anasanasri.github.io/autowidget/?access_key=${accessKey}&host=${currentURL}&marchand_id=${marchandId}&order_id=${orderId}&order_description=${orderDescription}&products_ids=${productsIds}&amount=${amount}&currency=${currency}&hmac=${hmac}&redirect_url=${redirectUrl}`;
+            iframe.src = `https://meskourlhoussaine.github.io/paiement-widget-CI-CD/?access_key=${accessKey}&host=${currentURL}&marchand_id=${marchandId}&order_id=${orderId}&order_description=${orderDescription}&products_ids=${productsIds}&amount=${amount}&currency=${currency}&hmac=${hmac}&redirect_url=${redirectUrl}`;
             iframe.style.width = "100%";
             iframe.style.height = "100%";
             container.appendChild(iframe);

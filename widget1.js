@@ -1,15 +1,26 @@
 document.addEventListener("DOMContentLoaded", function() {
+    
     // Create the button
     var button = document.createElement("button");
-    button.textContent = "Payer avec pay pik";
     button.id = "toggleButton";
+    button.style.display = "inline-flex"; // Set display to inline-flex
+
+    // Create the image element for the logo
+    var logo = document.createElement("img");
+    logo.src = "https://i.ibb.co/gFZGbV3/Logopng.png"; // Set the path to your logo image
+    logo.alt = "PayPik Logo";
+    logo.width = "20"; // Set the width of the logo (adjust as needed)
+    logo.style.marginRight = "10px"; // Add margin between the image and button text
+
+    // Append the logo to the button first
+    button.appendChild(logo);
+
+    // Set the button text
+    button.appendChild(document.createTextNode("Payer avec PayPik"));
 
     // Append the button to the desired container
     var container = document.getElementById("content-behind-iframe");
     container.appendChild(button);
-
-    
-    
     
  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
 // Click event listener for the button
@@ -20,7 +31,7 @@ button.addEventListener("click", function() {
 
         // 
         var accessKey = scriptElement.getAttribute('data-access_key');
-        var marchandId = scriptElement.getAttribute('data-marchand_id');
+        var marchandId = scriptElement.getAttribute('data-merchant_id');
         var orderId = scriptElement.getAttribute('data-order_id');
         var orderDescription = scriptElement.getAttribute('data-order_description');
         var productsIds = scriptElement.getAttribute('data-products_ids');
@@ -37,11 +48,8 @@ button.addEventListener("click", function() {
         console.log("HMAC: " + hmac);
 
 //////////////////////////////// Test host and access key and hmac
-console.log('url',currentURL);
-console.log('marchandId',marchandId);
-console.log('accessKey',accessKey);
 
-    var url = `http://localhost:8080/api/merchants/permission?hostname=${currentURL}&accessKey=${accessKey}&marchandId=${marchandId}&orderId=${orderId}&amount=${amount}&currency=${currency}&hmac=${hmac}`;
+    var url = `http://localhost:8080/api/merchants/permission?hostname=${currentURL}&accessKey=${accessKey}&merchantId=${marchandId}&orderId=${orderId}&amount=${amount}&currency=${currency}&hmac=${hmac}`;
 
     // Fetch data from localhost
     fetch(url)
@@ -95,7 +103,7 @@ console.log('accessKey',accessKey);
             iframe.style.display = "block";
         }
     }
-
+    
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -108,19 +116,24 @@ console.log('accessKey',accessKey);
 
     // Dynamically inject CSS styles
     var styles = `
-        #toggleButton {
-            background-color: green;
-            color: white;
-            border: round 1px solid;
-            padding: 10px 20px;
-            cursor: pointer;
-            /* Add any other styles you desire */
-        }
+    #toggleButton {
+        background-color: #5BC084;
+        color: white;
+        border-radius: 10px;
+        border: round 1px solid;
+        padding: 10px 20px;
+        cursor: pointer;
+        /* Add any other styles you desire */
+    }
+    #toggleButton:hover {
+        background-color: #3E8D5E;
+    }
     `;
 
     var styleElement = document.createElement("style");
     styleElement.textContent = styles;
     document.head.appendChild(styleElement);
+
 });
 
 

@@ -1,34 +1,34 @@
 document.addEventListener("DOMContentLoaded", function() {
     
-    // Create the button
+    // Création du bouton
     var button = document.createElement("button");
     button.id = "toggleButton";
-    button.style.display = "inline-flex"; // Set display to inline-flex
+    button.style.display = "inline-flex"; // Définir l'affichage en inline-flex
 
-    // Create the image element for the logo
+    // Création de l'élément d'image pour le logo
     var logo = document.createElement("img");
-    logo.src = "https://i.ibb.co/gFZGbV3/Logopng.png"; // Set the path to your logo image
+    logo.src = "https://i.ibb.co/gFZGbV3/Logopng.png"; // Chemin vers votre image de logo
     logo.alt = "PayPik Logo";
-    logo.width = "20"; // Set the width of the logo (adjust as needed)
-    logo.style.marginRight = "10px"; // Add margin between the image and button text
+    logo.width = "20"; // Définir la largeur du logo (ajuster si nécessaire)
+    logo.style.marginRight = "10px"; // Ajouter une marge entre l'image et le texte du bouton
 
-    // Append the logo to the button first
+    // Ajouter d'abord le logo au bouton
     button.appendChild(logo);
 
-    // Set the button text
+    // Définir le texte du bouton
     button.appendChild(document.createTextNode("Payer avec PayPik"));
 
-    // Append the button to the desired container
+    // Ajouter le bouton au conteneur désiré
     var container = document.getElementById("content-behind-iframe");
     container.appendChild(button);
     
-    // Click event listener for the button
+    // Écouteur d'événements de clic pour le bouton
     button.addEventListener("click", function() {
 
-        // 
+        // Récupération de l'élément de script
         var scriptElement = document.getElementById('paypik');
 
-        // 
+        // Récupération des attributs nécessaires pour la requête
         var accessKey = scriptElement.getAttribute('data-access_key');
         var marchandId = scriptElement.getAttribute('data-merchant_id');
         var orderId = scriptElement.getAttribute('data-order_id');
@@ -39,45 +39,39 @@ document.addEventListener("DOMContentLoaded", function() {
         var hmac = scriptElement.getAttribute('data-hmac');
         var redirectUrl = scriptElement.getAttribute('data-redirect_url');
         
-        //
+        // Récupération de l'URL actuelle
         var currentURL = window.location.href;    
         console.log(currentURL);
         
-        // Log HMAC value
+        // Affichage de la valeur HMAC dans la console
         console.log("HMAC: " + hmac);
 
-        // Test host and access key and hmac
-        console.log('Response Permission:', currentURL);
-        console.log('Response Permission:', accessKey);
-        console.log('Response Permission:', marchandId);
-        console.log('Response Permission:', orderId);
-        console.log('Response Permission:', amount);
-        console.log('Response Permission:', currency);
-        console.log('Response Permission:', hmac);
+        // Construction de l'URL pour la requête vers le serveur local
+        var url = `http://localhost:8080/api/merchants/permission?hostname=${encodeURIComponent(currentURL)}&accessKey=${encodeURIComponent(accessKey)}&merchantId=${encodeURIComponent(marchandId)}&orderId=${encodeURIComponent(orderId)}&amount=${encodeURIComponent(amount)}&currency=${encodeURIComponent(currency)}&hmac=${encodeURIComponent(hmac)}`;
 
-        var url = `http://localhost:8080/api/merchants/permission?hostname=${currentURL}&accessKey=${accessKey}&merchantId=${marchandId}&orderId=${orderId}&amount=${amount}&currency=${currency}&hmac=${hmac}`;
-
-        // Fetch data from localhost
+        // Effectuer la requête fetch vers le serveur local
         fetch(url)
         .then(response => {
             if (!response.ok) {
                 loadError();
-                throw new Error('Network response was not ok');
+                throw new Error('Réponse du réseau non valide');
             }
-            return response.json(); // Return the JSON data from the response
+            return response.json(); // Retourner les données JSON de la réponse
         })
         .then(data => {
-            console.log('Response Permission:', data);
+            console.log('Réponse Permission:', data);
             if (data === true && data.status !== 400) {
                 loadWidget(accessKey, currentURL, marchandId, orderId, orderDescription, productsIds, amount, currency, hmac, redirectUrl);
             } else {
-                loadError(); // Redirect to error page
+                loadError(); // Redirection vers la page d'erreur en cas de problème
             }
         })
-        .catch(error => console.error('Error fetching data from localhost:', error));
+        .catch(error => console.error('Erreur lors de la récupération des données depuis le serveur local:', error));
 
     });
+    
 
+    // Fonction pour charger la page d'erreur
     function loadError() {
         var iframe = document.getElementById("myiframe");
         if (!iframe) {
@@ -92,12 +86,13 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    // Fonction pour charger le widget de paiement
     function loadWidget(accessKey, currentURL, marchandId, orderId, orderDescription, productsIds, amount, currency, hmac, redirectUrl) {
         var iframe = document.getElementById("myiframe");
         if (!iframe) {
             iframe = document.createElement("iframe");
             iframe.id = "myiframe";
-            iframe.src = `https://meskourlhoussaine.github.io/paiement-widget-CI-CD/?access_key=${accessKey}&host=${currentURL}&marchand_id=${marchandId}&order_id=${orderId}&order_description=${orderDescription}&products_ids=${productsIds}&amount=${amount}&currency=${currency}&hmac=${hmac}&redirect_url=${redirectUrl}`;
+            iframe.src = `https://meskourlhoussaine.github.io/paiement-widget-CI-CD/?access_key=${encodeURIComponent(accessKey)}&host=${encodeURIComponent(currentURL)}&marchand_id=${encodeURIComponent(marchandId)}&order_id=${encodeURIComponent(orderId)}&order_description=${encodeURIComponent(orderDescription)}&products_ids=${encodeURIComponent(productsIds)}&amount=${encodeURIComponent(amount)}&currency=${encodeURIComponent(currency)}&hmac=${encodeURIComponent(hmac)}&redirect_url=${encodeURIComponent(redirectUrl)}`;
             iframe.style.width = "100%";
             iframe.style.height = "100%";
             container.appendChild(iframe);
@@ -106,14 +101,14 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // Event listener to handle message received from the widget
+    // Écouteur d'événements pour gérer les messages reçus depuis le widget
     window.addEventListener("message", function(event) {
         if (event.data === "closeWidget") {
             document.getElementById("myiframe").style.display = "none";
         }
     });
 
-    // Dynamically inject CSS styles
+    // Injection dynamique des styles CSS
     var styles = `
     #toggleButton {
         background-color: #5BC084;
@@ -122,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function() {
         border: round 1px solid;
         padding: 10px 20px;
         cursor: pointer;
-        /* Add any other styles you desire */
+        /* Ajoutez d'autres styles souhaités */
     }
     #toggleButton:hover {
         background-color: #3E8D5E;

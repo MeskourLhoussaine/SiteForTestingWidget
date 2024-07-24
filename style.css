@@ -7,7 +7,12 @@
     padding: 20px;
     background: #f1f1f1;
   }
-  
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
   /* Header/Blog Title */
   .header {
     padding: 30px;
@@ -55,7 +60,7 @@
   .footer {
     padding: 20px;
     text-align: center;
-    background: #ddd;
+    background: #ac1d1d;
     margin-top: 20px;
   }
   

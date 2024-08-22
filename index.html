@@ -338,11 +338,12 @@
 
 
 <!-- widget -->
+<!-- widget -->
 <script id="paypik" 
     src="./widget1.js"
     data-merchant_id="4" 
     data-access_key="xyz78" 
-    data-order_id="8672" 
+    data-order_id="" 
     data-order_description="order description" 
     data-products_ids="[1,2,3,4,5,6,7,8,9]" 
     data-amount="1889.0" 
@@ -353,15 +354,13 @@
 <!-- . -->
 
 <!-- ////// -->
-<!-- Add this line to include CryptoJS via CDN  ar amount = "1889.0"; -->
+<!-- Add this line to include CryptoJS via CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
 <script>
-
-
     var marchand_id = "4";
-    var order_id = "8672";
-   var amount = "1889.0";
+    var order_id = Math.floor(Math.random() * 10000).toString(); // Generate a random order_id
+    var amount = "1889.0";
     var currency = "MAD";
     var my_secret_key = "5AM2MwyO0TAElCkf+HkI4uoJ8XimGWdYH9OwUpjj7h8=";
 
@@ -369,8 +368,11 @@
     var hmac = CryptoJS.HmacSHA1(message, my_secret_key).toString();
     
     var paypik = document.getElementById("paypik");
+    paypik.setAttribute("data-order_id", order_id); // Set the random order_id in the script tag
     paypik.setAttribute("data-hmac", hmac);
 </script>
+<!-- ////// -->
+
 <!-- ////// -->
 <!-- CryptoJS.HmacSHA1(marchand_id + ':' + order_id + ':' + amount + ':' + currency, '5ec229cbd6f2f9fc1c38b67e6ada5035358367384c0d2b86d7eb6a0a2fa89708').toString() -->
 <!-- 1:111:1000:MAD // 5ec229cbd6f2f9fc1c38b67e6ada5035358367384c0d2b86d7eb6a0a2fa89708 //6f02ea4b4b579b83bf640fc4e7e4e9afe905e27f  -->
